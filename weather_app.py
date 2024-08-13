@@ -37,7 +37,7 @@ class WeatherAPI:
 class MockWeather:
     def __init__(self):
         self.mock_data = {
-            "temp": 25,
+            "temperature": 25,
             "humidity": 50
         }
     
@@ -51,10 +51,10 @@ class WeatherHandler:
 
     def get_weather_data(self):
         if isinstance(self.service, WeatherAPI):
-            data = self.service.call_endpoint()
+            self.data = self.service.call_endpoint()
         else:
-            data = self.service.generate_data()
-        return self.verify_data(data)
+            self.data = self.service.generate_data()
+        return self.verify_data(self.data)
     
     def verify_data(self, data):
         if(data):
@@ -63,6 +63,28 @@ class WeatherHandler:
         else:
             print("Data verification failed")
             return None 
+    
+    def get_temp(self):
+        self.get_weather_data()
+        if isinstance(self.data, list):
+            temperatures = [entry["temperature"] for entry in self.data]
+            return temperatures
+        elif isinstance(self.data, dict) and "temperature" in self.data:
+            return self.data["temperature"]
+        else:
+            print("Temperature data not available")
+            return None
+        
+    def get_humidity(self):
+        self.get_weather_data()
+        if isinstance(self.data, list):
+            humidities = [entry["humidity"] for entry in self.data]
+            return humidities
+        elif isinstance(self.data, dict) and "humidity" in self.data:
+            return self.data["humidity"]
+        else:
+            print("Humidity data not available")
+            return None
 
 # creates services
 class ServiceFactory:

@@ -25,7 +25,7 @@ class WeatherTesting(unittest.TestCase):
         handler = WeatherHandler(service)
         data = handler.get_weather_data()
         
-        expected_data = {"temp": 25, "humidity": 50}
+        expected_data = {"temperature": 25, "humidity": 50}
         self.assertEqual(data, expected_data)
 
     def test_handler_invalid_data(self):
@@ -34,6 +34,26 @@ class WeatherTesting(unittest.TestCase):
         service.mock_data = {}
         data = handler.get_weather_data()
         self.assertIsNone(data)
+
+    def test_get_temp_mock(self):
+        service = MockWeather()
+        handler = WeatherHandler(service)
+        data = handler.get_temp()
+        expected_data = 25
+        self.assertEqual(data, expected_data)
+
+    def test_get_humidity_mock(self):
+        service = MockWeather()
+        handler = WeatherHandler(service)
+        data = handler.get_humidity()
+        expected_data = 50
+        self.assertEqual(data, expected_data)
+
+    def test_get_humidity_api(self):
+        service = WeatherAPI()
+        handler = WeatherHandler(service)
+        data = handler.get_humidity()
+        self.assertIsNotNone(data)
 
 if __name__ == "__main__":
     unittest.main()
